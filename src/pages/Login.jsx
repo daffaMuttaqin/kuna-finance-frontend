@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import bg from "../assets/bg-1.jpg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,36 +26,45 @@ const Login = () => {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "auto" }}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <p style={{ color: "red" }}>{msg}</p>
-        <div>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: "100%" }}
-          />
+    <div className="flex h-screen w-screen bg-gray-950">
+      <div className="w-1/2 h-full lg:block md:block hidden">
+        <img src={bg} className="w-full h-full" alt="" />
+      </div>
+      <div className="lg:w-1/2 w-full">
+        <div className="h-full flex items-center mx-10">
+          <div className="w-full text-slate-300">
+            <h1 className="lg:text-2xl text-lg font-semibold">
+              Selamat Datang di Kuna Patisserie
+            </h1>
+            <form
+              className="text-slate-400 flex flex-col"
+              onSubmit={handleLogin}
+            >
+              <label className="my-2 lg:text-base text-sm">Alamat Email</label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={email}
+                className="lg:w-1/2 w-full lg:h-9 h-7 border border-slate-400 rounded-md px-3"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <label className="my-2 lg:text-base text-sm">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value={password}
+                className="lg:w-1/2 w-full lg:h-9 h-7 border border-slate-400 rounded-md px-3"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button className="btn btn-primary lg:w-1/4 w-full mt-4 font-semibold lg:text-lg text-base">
+                Masuk
+              </button>
+            </form>
+          </div>
         </div>
-        <div>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: "100%" }}
-          />
-        </div>
-        <button type="submit" style={{ marginTop: "1rem" }}>
-          Login
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
