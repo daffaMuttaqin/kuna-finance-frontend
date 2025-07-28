@@ -4,22 +4,51 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/dashboard";
 import ProtectedRoutes from "./components/ProtectedRoute";
 import Home from "./pages/Home";
-import Navbar from "./components/Navbar";
+import Customer from "./pages/Customer";
+import NoSidebarLayout from "./layouts/NoSidebarLayout";
+import SidebarLayout from "./layouts/SidebarLayout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
+        {/* Tanpa Sidebar */}
         <Route
-          path="/dashboard"
+          path="/login"
           element={
-            <ProtectedRoutes>
-              <Dashboard />
-            </ProtectedRoutes>
+            <NoSidebarLayout>
+              <Login />
+            </NoSidebarLayout>
           }
         />
+        <Route
+          path="/"
+          element={
+            <NoSidebarLayout>
+              <Home />
+            </NoSidebarLayout>
+          }
+        />
+
+        {/* Routes DENGAN Sidebar */}
+        <Route element={<SidebarLayout />}>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoutes>
+                <Dashboard />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/customer"
+            element={
+              <ProtectedRoutes>
+                <Customer />
+              </ProtectedRoutes>
+            }
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
