@@ -96,14 +96,26 @@ function Sidebar({ children }) {
                     className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group"
                   >
                     <svg
-                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
+                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
                       fill="currentColor"
-                      viewBox="0 0 20 18"
+                      viewBox="0 0 24 24"
                     >
-                      <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v6.41A7.5 7.5 0 1 0 10.5 22H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Z"
+                        clip-rule="evenodd"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M9 16a6 6 0 1 1 12 0 6 6 0 0 1-12 0Zm6-3a1 1 0 0 1 1 1v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 1 1 0-2h1v-1a1 1 0 0 1 1-1Z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
+
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Input Pemasukan
                     </span>
@@ -116,14 +128,26 @@ function Sidebar({ children }) {
                     className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group"
                   >
                     <svg
-                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
+                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 18"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
                     >
-                      <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                      <path
+                        fill="currentColor"
+                        d="M4 19v2c0 .5523.44772 1 1 1h14c.5523 0 1-.4477 1-1v-2H4Z"
+                      />
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M9 3c0-.55228.44772-1 1-1h8c.5523 0 1 .44772 1 1v3c0 .55228-.4477 1-1 1h-2v1h2c.5096 0 .9376.38314.9939.88957L19.8951 17H4.10498l.90116-8.11043C5.06241 8.38314 5.49047 8 6.00002 8H12V7h-2c-.55228 0-1-.44772-1-1V3Zm1.01 8H8.00002v2.01H10.01V11Zm.99 0h2.01v2.01H11V11Zm5.01 0H14v2.01h2.01V11Zm-8.00998 3H10.01v2.01H8.00002V14ZM13.01 14H11v2.01h2.01V14Zm.99 0h2.01v2.01H14V14ZM11 4h6v1h-6V4Z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
+
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Lihat Data Pemasukan
                     </span>
@@ -137,14 +161,18 @@ function Sidebar({ children }) {
                     className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group"
                   >
                     <svg
-                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
+                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
                       fill="currentColor"
-                      viewBox="0 0 20 18"
+                      viewBox="0 0 24 24"
                     >
-                      <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                      <path d="M12.268 6A2 2 0 0 0 14 9h1v1a2 2 0 0 0 3.04 1.708l-.311 1.496a1 1 0 0 1-.979.796H8.605l.208 1H16a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L4.686 5H4a1 1 0 0 1 0-2h1.5a1 1 0 0 1 .979.796L6.939 6h5.329Z" />
+                      <path d="M18 4a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0V8h2a1 1 0 1 0 0-2h-2V4Z" />
                     </svg>
+
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Input Pengeluaran
                     </span>
@@ -157,14 +185,21 @@ function Sidebar({ children }) {
                     className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group"
                   >
                     <svg
-                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
+                      className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
                       fill="currentColor"
-                      viewBox="0 0 20 18"
+                      viewBox="0 0 24 24"
                     >
-                      <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
+
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Lihat Data Pengeluaran
                     </span>
@@ -180,11 +215,18 @@ function Sidebar({ children }) {
                       className="shrink-0 w-5 h-5 text-gray-500 transition duration-75  group-hover:text-gray-900 "
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
                       fill="currentColor"
-                      viewBox="0 0 20 18"
+                      viewBox="0 0 24 24"
                     >
-                      <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-3 8a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Zm2 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Z"
+                        clip-rule="evenodd"
+                      />
                     </svg>
+
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       Activity Logs
                     </span>
