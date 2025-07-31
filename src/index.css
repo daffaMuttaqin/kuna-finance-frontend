@@ -1,5 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Chewy&display=swap");
 @import "tailwindcss";
 /* @plugin "daisyui"; */
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, cupcake;
+}
+
+/* FONT */
+@layer utilities {
+  .font-chewy {
+    font-family: "Chewy", system-ui;
+  }
 }

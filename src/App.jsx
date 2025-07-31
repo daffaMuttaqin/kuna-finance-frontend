@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/Dashboard";
 import ProtectedRoutes from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Customer from "./pages/Customer";
