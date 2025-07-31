@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import InputIncome from "./pages/InputIncome";
 import ProtectedRoutes from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Customer from "./pages/Customer";
@@ -45,6 +46,14 @@ function App() {
             element={
               <ProtectedRoutes>
                 <Customer />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/inputIncome"
+            element={
+              <ProtectedRoutes>
+                <InputIncome />
               </ProtectedRoutes>
             }
           />

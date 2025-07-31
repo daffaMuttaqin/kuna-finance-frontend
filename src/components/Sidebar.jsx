@@ -123,7 +123,7 @@ function Sidebar({ children }) {
                 {/* INPUT INCOME */}
                 <li>
                   <Link
-                    to="#"
+                    to="/inputIncome"
                     className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d]"
                   >
                     <svg
