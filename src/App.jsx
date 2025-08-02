@@ -2,8 +2,6 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import InputIncome from "./pages/InputIncome";
-import InputExpense from "./pages/InputExpense";
 import Income from "./pages/Income";
 import Expense from "./pages/Expense";
 import ActivityLogs from "./pages/ActivityLogs";
@@ -54,26 +52,10 @@ function App() {
             }
           />
           <Route
-            path="/inputIncome"
-            element={
-              <ProtectedRoutes>
-                <InputIncome />
-              </ProtectedRoutes>
-            }
-          />
-          <Route
             path="/income"
             element={
               <ProtectedRoutes>
                 <Income />
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/inputExpense"
-            element={
-              <ProtectedRoutes>
-                <InputExpense />
               </ProtectedRoutes>
             }
           />
