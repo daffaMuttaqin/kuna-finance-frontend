@@ -42,7 +42,7 @@ function Sidebar({ children }) {
           <div className="mx-2 flex-1 px-2 font-chewy text-4xl">
             Kuna Patisserie
           </div>
-          <div className="hidden flex-none lg:block">
+          <div className="flex-none mr-1 lg:mr-2">
             <div className="dropdown dropdown-end">
               <div
                 tabIndex={0}
@@ -78,7 +78,7 @@ function Sidebar({ children }) {
                 <li>
                   <Link
                     to="/dashboard"
-                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] ${
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
                       isActive("/dashboard") ? "bg-[#90a17d]" : ""
                     }`}
                   >
@@ -101,7 +101,7 @@ function Sidebar({ children }) {
                 <li>
                   <Link
                     to="/customer"
-                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] ${
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
                       isActive("/customer") ? "bg-[#90a17d]" : ""
                     }`}
                   >
@@ -124,7 +124,9 @@ function Sidebar({ children }) {
                 <li>
                   <Link
                     to="/inputIncome"
-                    className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d]"
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
+                      isActive("/inputIncome") ? "bg-[#90a17d]" : ""
+                    }`}
                   >
                     <svg
                       className="shrink-0 w-7 h-7 text-slate-100 transition duration-75  group-hover:text-gray-900"
@@ -155,8 +157,10 @@ function Sidebar({ children }) {
                 {/* LIHAT DATA PEMASUKAN */}
                 <li>
                   <Link
-                    to="#"
-                    className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d]"
+                    to="/income"
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
+                      isActive("/income") ? "bg-[#90a17d]" : ""
+                    }`}
                   >
                     <svg
                       className="shrink-0 w-7 h-7 text-slate-100 transition duration-75  group-hover:text-gray-900"
@@ -188,8 +192,10 @@ function Sidebar({ children }) {
                 {/* INPUT PENGELUARAN */}
                 <li>
                   <Link
-                    to="#"
-                    className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d]"
+                    to="/inputExpense"
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
+                      isActive("/inputExpense") ? "bg-[#90a17d]" : ""
+                    }`}
                   >
                     <svg
                       className="shrink-0 w-7 h-7 text-slate-100 transition duration-75  group-hover:text-gray-900"
@@ -212,8 +218,10 @@ function Sidebar({ children }) {
                 {/* LIHAT DATA PENGELUARAN */}
                 <li>
                   <Link
-                    to="#"
-                    className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d]"
+                    to="/expense"
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
+                      isActive("/expense") ? "bg-[#90a17d]" : ""
+                    }`}
                   >
                     <svg
                       className="shrink-0 w-7 h-7 text-slate-100 transition duration-75  group-hover:text-gray-900"
@@ -239,8 +247,10 @@ function Sidebar({ children }) {
                 {/* Activity Logs */}
                 <li>
                   <Link
-                    to="#"
-                    className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d]"
+                    to="/activityLogs"
+                    className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
+                      isActive("/activityLogs") ? "bg-[#90a17d]" : ""
+                    }`}
                   >
                     <svg
                       className="shrink-0 w-7 h-7 text-slate-100 transition duration-75  group-hover:text-gray-900 "
@@ -280,12 +290,32 @@ function Sidebar({ children }) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-80 p-4">
+        <ul className="menu bg-[#ffa300] min-h-full w-80 p-4 font-semibold text-white">
           <li>
-            <a href="/dashboard">Dashboard</a>
+            <Link
+              to="/dashboard"
+              className={`flex items-center p-2 text-gray-900 rounded-lg hover:bg-[#90a17d] duration-200 ${
+                isActive("/dashboard") ? "bg-[#90a17d]" : ""
+              }`}
+            >
+              <svg
+                className="w-7 h-7 text-slate-100 transition duration-75  group-hover:text-gray-900 "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 22 21"
+              >
+                <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
+                <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
+              </svg>
+              <span className="ms-3 text-lg text-slate-100">Dashboard</span>
+            </Link>
           </li>
           <li>
-            <a href="/customer">Users</a>
+            <Link to={"/customer"}>Pelanggan</Link>
+          </li>
+          <li>
+            <button onClick={handleLogout}>Logout</button>
           </li>
           {/* Tambah menu mobile */}
         </ul>
