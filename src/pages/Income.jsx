@@ -1,9 +1,26 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/authService";
+import Select from "react-select";
 
 function Income() {
   const [data, setData] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [purchaseDate, setPurchaseDate] = useState("");
+  const [totalPrice, setTotalPrice] = useState("");
+  const [notes, setNotes] = useState("");
 
+  // List manual barang
+  const items = [
+    {
+      value: "Burnt Cheese Cake Brownies",
+      label: "Burnt Cheese Cake Brownies",
+    },
+    { value: "Cheesetart Brule", label: "Cheesetart Brule" },
+  ];
+
+  // Ambil Data Seluruh Incomes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -13,9 +30,80 @@ function Income() {
         console.error("Gagal mengambil data", error);
       }
     };
-
     fetchData();
   }, []);
+
+  // Ambil data customers
+  useEffect(() => {
+    API.get("/customers")
+      .then((res) => {
+        const options = res.data.map((customer) => ({
+          value: customer.id,
+          label: customer.name,
+        }));
+        setCustomers(options);
+      })
+      .catch((err) => {
+        console.error("Gagal mengambil data pelanggan", err);
+      });
+  }, []);
+
+  // Handle Submit
+  const handleSubmit = async () => {
+    if (!selectedItem || !selectedCustomer || !purchaseDate || !totalPrice) {
+      alert("Harap isi semua Field");
+      return;
+    }
+
+    const payload = {
+      item_name: selectedItem.value,
+      customer_id: selectedCustomer.value,
+      purchase_date: purchaseDate,
+      total_price: parseInt(totalPrice),
+      notes: notes,
+    };
+
+    try {
+      const res = await API.post("/incomes", payload);
+
+      // Normalisasi data untuk menghindari error NaN dan Invalid Date
+      const now = new Date().toISOString();
+      // Tambah data baru ke dalam state `data` (tanpa fetch ulang)
+      const newIncome = {
+        ...res.data,
+        customer_name: selectedCustomer.label,
+        item_name: selectedItem.value,
+        notes: notes,
+        total_price: Number(res.data.total_price) || parseInt(totalPrice),
+        purchase_date: res.data.purchase_date || purchaseDate || now,
+        created_at: res.data.created_at || now,
+      };
+
+      // Tambahkan data baru ke state
+      setData((prev) => [...prev, newIncome]);
+
+      // Reset form
+      setSelectedItem(null);
+      setSelectedCustomer(null);
+      setPurchaseDate("");
+      setTotalPrice("");
+      setNotes("");
+
+      // Tutup modal
+      document.getElementById("modal_tambah_barang").close();
+
+      // Tampilkan toast sukses
+      const toast = document.getElementById("toast-success");
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3000);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengirim data");
+    }
+  };
+
   return (
     <div className="w-full h-full">
       <div className="p-0 lg:p-6">
@@ -73,16 +161,17 @@ function Income() {
             </thead>
             <tbody>
               {data.map((item, key) => (
-                <tr key={item.id}>
+                <tr key={item.id || `temp-${key}`}>
                   <th> {key + 1} </th>
                   <td> {item.item_name} </td>
                   <td> {item.customer_name} </td>
                   <td>
                     Rp.{" "}
-                    {Number(item.total_price).toLocaleString("id-ID", {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    })}
+                    {item.total_price &&
+                      Number(item.total_price).toLocaleString("id-ID", {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      })}
                   </td>
                   <td className="text-center">
                     {" "}
@@ -155,37 +244,120 @@ function Income() {
               Tambah Pemasukan
             </legend>
 
+            {/* Nama Barang */}
             <label className="label">Nama Barang</label>
-            <input type="text" className="input" placeholder="ex: Cheescake" />
-
-            <label className="label">Pelanggan</label>
-            <label className="select">
-              <span className="label">Nama</span>
-              <select>
-                <option>Daffa</option>
-                <option>Ariq</option>
-              </select>
+            <label className="">
+              <Select
+                options={items}
+                value={selectedItem}
+                onChange={setSelectedItem}
+                placeholder="Pilih barang.."
+                isSearchable
+              />
             </label>
 
+            {/* Customer */}
+            <label className="label">Pelanggan</label>
+            <label className="">
+              <Select
+                options={customers}
+                value={selectedCustomer}
+                onChange={setSelectedCustomer}
+                placeholder="Pilih pelanggan.."
+                isSearchable
+              />
+            </label>
+
+            {/* Tanggal Pembelian */}
             <label className="label">Tanggal Pembelian</label>
             <label className="input">
               <span className="label">Pilih Tanggal</span>
-              <input type="date" />
+              <input
+                type="date"
+                value={purchaseDate}
+                onChange={(e) => setPurchaseDate(e.target.value)}
+              />
             </label>
 
+            {/* Total Harga */}
             <label className="label">Total Harga</label>
             <label className="input">
               <span className="label">Rp.</span>
-              <input type="text" placeholder="50000" />
+              <input
+                type="number"
+                value={totalPrice}
+                onChange={(e) => setTotalPrice(e.target.value)}
+                placeholder="50000"
+              />
             </label>
 
-            <button className="btn btn-info mt-4">Tambah</button>
+            {/* Catatan */}
+            <label className="label">Catatan</label>
+            <textarea
+              className="textarea textarea-bordered w-full"
+              placeholder="Catatan tambahan..."
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            ></textarea>
+
+            {/* Tombol Submit */}
+            <button onClick={handleSubmit} className="btn btn-info mt-4">
+              Tambah
+            </button>
           </fieldset>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>
       </dialog>
+
+      {/* TOAST SUCCESS */}
+      <div
+        id="toast-success"
+        className="hidden fixed bottom-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm  z-50"
+        role="alert"
+      >
+        <div className="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg ">
+          <svg
+            className="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+          </svg>
+          <span className="sr-only">Check icon</span>
+        </div>
+        <div className="ms-3 text-sm font-normal">
+          Data berhasil ditambahkan.
+        </div>
+        <button
+          type="button"
+          className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 "
+          onClick={() =>
+            document.getElementById("toast-success").classList.add("hidden")
+          }
+          aria-label="Close"
+        >
+          <span className="sr-only">Close</span>
+          <svg
+            className="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
 }
