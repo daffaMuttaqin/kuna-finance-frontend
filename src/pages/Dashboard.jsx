@@ -54,7 +54,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="p-6">
+      <div className="p-0 lg:p-6">
         <h2 className="text-2xl font-bold mb-4">Dashboard Keuangan</h2>
 
         {/* STAT BOX */}
