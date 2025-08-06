@@ -1,7 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CountUp from "../components/CountUp";
+import API from "../services/authService";
 
 function Expense() {
+  const [categoryData, setCategoryData] = useState({
+    Produksi: 0,
+    Operasional: 0,
+    Marketing: 0,
+  });
+
+  // Get data category perbulan
+  useEffect(() => {
+    const fetchData = async () => {
+      const now = new Date();
+      const currentMonth = now.getMonth() + 1;
+      const currentYear = now.getFullYear();
+
+      try {
+        const res = await API.get(
+          `/expenses/summary/category?month=${currentMonth}&year=${currentYear}`
+        );
+
+        // Buat objek kosong default
+        const updatedData = {
+          Produksi: 0,
+          Operasional: 0,
+          Marketing: 0,
+        };
+
+        res.data.forEach((item) => {
+          const category = item.category;
+          updatedData[category] = Number(item.total);
+        });
+
+        setCategoryData(updatedData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div>
       <div className="p-0 lg:p-6">
@@ -16,7 +54,7 @@ function Expense() {
               <CountUp
                 from={0}
                 // to={Number(data.incomeToday)}
-                to={100000}
+                to={categoryData.Produksi}
                 separator="."
                 duration={0.1}
                 className="inline"
@@ -30,7 +68,7 @@ function Expense() {
               <CountUp
                 from={0}
                 // to={Number(data.incomeMonth)}
-                to={40000}
+                to={categoryData.Operasional}
                 separator="."
                 duration={0.1}
                 className="inline"
@@ -45,7 +83,7 @@ function Expense() {
                 <CountUp
                   from={0}
                   // to={Number(data.expenseToday)}
-                  to={50000}
+                  to={categoryData.Marketing}
                   separator="."
                   duration={0.1}
                   className="inline"
