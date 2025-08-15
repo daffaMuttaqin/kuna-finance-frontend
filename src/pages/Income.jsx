@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
-import API from "../services/authService";
+import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
+import API from "../services/authService";
+import {
+  fetchIncomes,
+  addIncome,
+  updateIncome,
+  deleteIncome,
+} from "../features/incomeSlice";
 
 function Income() {
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.income);
+
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -16,7 +25,6 @@ function Income() {
   const [deleteId, setDeleteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // List manual barang
   const items = [
     {
       value: "Burnt Cheese Cake Brownies",
@@ -25,35 +33,24 @@ function Income() {
     { value: "Cheesetart Brule", label: "Cheesetart Brule" },
   ];
 
-  // Ambil Data Seluruh Incomes
+  // Fetch data incomes dari Redux
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await API.get("/incomes");
-        setData(res.data);
-      } catch (error) {
-        console.error("Gagal mengambil data", error);
-      }
-    };
-    fetchData();
-  }, []);
+    dispatch(fetchIncomes());
+  }, [dispatch]);
 
-  // Ambil data customers
+  // Fetch customers (masih manual API langsung, karena tidak ada slice-nya)
   useEffect(() => {
     API.get("/customers")
       .then((res) => {
-        const options = res.data.map((customer) => ({
-          value: customer.id,
-          label: customer.name,
+        const options = res.data.map((c) => ({
+          value: c.id,
+          label: c.name,
         }));
         setCustomers(options);
       })
-      .catch((err) => {
-        console.error("Gagal mengambil data pelanggan", err);
-      });
+      .catch((err) => console.error("Gagal mengambil data pelanggan", err));
   }, []);
 
-  // Handle Submit
   const handleSubmit = async () => {
     if (!selectedItem || !selectedCustomer || !purchaseDate || !totalPrice) {
       alert("Harap isi semua Field");
@@ -65,73 +62,73 @@ function Income() {
       customer_id: selectedCustomer.value,
       purchase_date: purchaseDate,
       total_price: parseInt(totalPrice),
-      notes: notes,
+      notes,
     };
 
     try {
       if (isEditing && editingId) {
-        // EDIT DATA
         const res = await API.put(`/incomes/${editingId}`, payload);
         const now = new Date().toISOString();
         const updatedIncome = {
           ...res.data,
           item_name: selectedItem.value,
           customer_name: selectedCustomer.label,
-          notes: notes,
+          notes,
           total_price: parseInt(totalPrice),
           purchase_date: res.data.purchase_date || purchaseDate || now,
           created_at: res.data.created_at || now,
         };
-
-        setData((prev) =>
-          prev.map((item) => (item.id === editingId ? updatedIncome : item))
-        );
-
+        dispatch(updateIncome(updatedIncome));
         setToastMessage("Data telah berhasil diedit");
       } else {
-        // Tambah Data
         const res = await API.post("/incomes", payload);
-        // Normalisasi data untuk menghindari error NaN dan Invalid Date
         const now = new Date().toISOString();
-        // Tambah data baru ke dalam state `data` (tanpa fetch ulang)
         const newIncome = {
           ...res.data,
           customer_name: selectedCustomer.label,
           item_name: selectedItem.value,
-          notes: notes,
+          notes,
           total_price: Number(res.data.total_price) || parseInt(totalPrice),
           purchase_date: res.data.purchase_date || purchaseDate || now,
           created_at: res.data.created_at || now,
         };
-
-        // Tambahkan data baru ke state
-        setData((prev) => [...prev, newIncome]);
+        dispatch(addIncome(newIncome));
         setToastMessage("Data telah berhasil ditambah");
       }
 
-      // Reset form
-      setSelectedItem(null);
-      setSelectedCustomer(null);
-      setPurchaseDate("");
-      setTotalPrice("");
-      setNotes("");
-
-      // Tutup modal
+      resetForm();
       document.getElementById("modal_tambah_barang").close();
-
-      // Tampilkan toast sukses
-      const toast = document.getElementById("toast-success");
-      toast.classList.remove("hidden");
-      setTimeout(() => {
-        toast.classList.add("hidden");
-      }, 3000);
+      showToast();
     } catch (err) {
       console.error(err);
       alert("Gagal mengirim data");
     }
   };
 
-  // Reset Form
+  const handleDelete = async () => {
+    try {
+      await API.delete(`/incomes/${deleteId}`);
+      dispatch(deleteIncome(deleteId));
+      document.getElementById("modal_delete").close();
+      setToastMessage("Data berhasil dihapus");
+      showToast();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data");
+    }
+  };
+
+  const handleEdit = (item) => {
+    setIsEditing(true);
+    setEditingId(item.id);
+    setSelectedItem({ label: item.item_name, value: item.item_name });
+    setSelectedCustomer({ label: item.customer_name, value: item.customer_id });
+    setPurchaseDate(parseDateToLocalInput(item.purchase_date));
+    setTotalPrice(item.total_price);
+    setNotes(item.notes || "");
+    document.getElementById("modal_tambah_barang").showModal();
+  };
+
   const resetForm = () => {
     setSelectedItem(null);
     setSelectedCustomer(null);
@@ -150,38 +147,10 @@ function Income() {
     return `${year}-${month}-${day}`;
   };
 
-  // EDIT DATA
-  const handleEdit = (item) => {
-    setIsEditing(true);
-    setEditingId(item.id);
-
-    setSelectedItem({ label: item.item_name, value: item.item_name }); // karena manual
-    setSelectedCustomer({ label: item.customer_name, value: item.customer_id });
-    setPurchaseDate(parseDateToLocalInput(item.purchase_date));
-    setTotalPrice(item.total_price);
-    setNotes(item.notes || "");
-
-    document.getElementById("modal_tambah_barang").showModal();
-  };
-
-  // DELETE DATA
-  const handleDelete = async () => {
-    try {
-      await API.delete(`/incomes/${deleteId}`);
-      setData((prev) => prev.filter((item) => item.id !== deleteId));
-      document.getElementById("modal_delete").close();
-
-      // Tampilkan toast
-      setToastMessage("Data berhasil dihapus");
-      const toast = document.getElementById("toast-success");
-      toast.classList.remove("hidden");
-      setTimeout(() => {
-        toast.classList.add("hidden");
-      }, 3000);
-    } catch (err) {
-      console.error(err);
-      alert("Gagal menghapus data");
-    }
+  const showToast = () => {
+    const toast = document.getElementById("toast-success");
+    toast.classList.remove("hidden");
+    setTimeout(() => toast.classList.add("hidden"), 3000);
   };
 
   return (
@@ -235,109 +204,115 @@ function Income() {
 
         {/* TABEL */}
         <div className="h-[723px] overflow-x-auto">
-          <table className="table table-sm table-pin-rows">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Nama Barang</th>
-                <th>Nama Customer</th>
-                <th>Total Harga</th>
-                <th className="text-center">Tanggal Pembelian</th>
-                <th className="text-center">Tanggal Ditambahkan</th>
-                <th>Keterangan</th>
-                <th className="text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data
-                .filter((item) =>
-                  item.customer_name
-                    ?.toLowerCase()
-                    .includes(searchQuery.toLowerCase())
-                )
-                .map((item, key) => (
-                  <tr key={item.id || `temp-${key}`}>
-                    <th> {key + 1} </th>
-                    <td> {item.item_name} </td>
-                    <td> {item.customer_name} </td>
-                    <td>
-                      Rp.{" "}
-                      {item.total_price &&
-                        Number(item.total_price).toLocaleString("id-ID", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        })}
-                    </td>
-                    <td className="text-center">
-                      {" "}
-                      {new Date(item.purchase_date).toLocaleString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}{" "}
-                    </td>
-                    <td className="text-center">
-                      {" "}
-                      {new Date(item.created_at).toLocaleString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}{" "}
-                    </td>
-                    <td> {item.notes} </td>
-                    <td className="flex justify-center">
-                      <button
-                        onClick={() => handleEdit(item)}
-                        className="btn btn-square btn-success"
-                      >
-                        <svg
-                          className="size-[22px]"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          viewBox="0 0 24 24"
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-red-500">Error: {error}</p>
+          ) : (
+            <table className="table table-sm table-pin-rows">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Nama Barang</th>
+                  <th>Nama Customer</th>
+                  <th>Total Harga</th>
+                  <th className="text-center">Tanggal Pembelian</th>
+                  <th className="text-center">Tanggal Ditambahkan</th>
+                  <th>Keterangan</th>
+                  <th className="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data
+                  .filter((item) =>
+                    item.customer_name
+                      ?.toLowerCase()
+                      .includes(searchQuery.toLowerCase())
+                  )
+                  .map((item, key) => (
+                    <tr key={item.id || `temp-${key}`}>
+                      <th> {key + 1} </th>
+                      <td> {item.item_name} </td>
+                      <td> {item.customer_name} </td>
+                      <td>
+                        Rp.{" "}
+                        {item.total_price &&
+                          Number(item.total_price).toLocaleString("id-ID", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          })}
+                      </td>
+                      <td className="text-center">
+                        {" "}
+                        {new Date(item.purchase_date).toLocaleString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}{" "}
+                      </td>
+                      <td className="text-center">
+                        {" "}
+                        {new Date(item.created_at).toLocaleString("id-ID", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}{" "}
+                      </td>
+                      <td> {item.notes} </td>
+                      <td className="flex justify-center">
+                        <button
+                          onClick={() => handleEdit(item)}
+                          className="btn btn-square btn-success"
                         >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setDeleteId(item.id); // simpan id yang akan dihapus
-                          document.getElementById("modal_delete").showModal();
-                        }}
-                        className="btn btn-square btn-error lg:ml-2 ml-1"
-                      >
-                        <svg
-                          className="size-[20px]"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          fill="none"
-                          viewBox="0 0 24 24"
+                          <svg
+                            className="size-[22px]"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setDeleteId(item.id); // simpan id yang akan dihapus
+                            document.getElementById("modal_delete").showModal();
+                          }}
+                          className="btn btn-square btn-error lg:ml-2 ml-1"
                         >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                          />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+                          <svg
+                            className="size-[20px]"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                            />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
         </div>
         {/* END TABEL */}
       </div>
