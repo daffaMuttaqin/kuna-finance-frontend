@@ -69,8 +69,14 @@ function Income() {
       if (isEditing && editingId) {
         const res = await API.put(`/incomes/${editingId}`, payload);
         const now = new Date().toISOString();
+
+        // Ambil data lama dari store
+        const oldData = data.find((i) => i.id === editingId);
+
         const updatedIncome = {
+          ...oldData, // merge dengan data lama supaya field lain tidak hilang
           ...res.data,
+          id: Number(editingId), // pastikan tipe sama
           item_name: selectedItem.value,
           customer_name: selectedCustomer.label,
           notes,
