@@ -39,7 +39,7 @@ function Sidebar({ children }) {
               </svg>
             </label>
           </div>
-          <div className="mx-2 flex-1 px-2 font-chewy text-4xl">
+          <div className="mx-2 flex-1 px-2 font-chewy lg:text-4xl text-2xl text-slate-800">
             Kuna Patisserie
           </div>
           <div className="flex-none mr-1 lg:mr-2">

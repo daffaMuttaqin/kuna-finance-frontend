@@ -211,9 +211,11 @@ function Income() {
         {/* TABEL */}
         <div className="h-[723px] overflow-x-auto">
           {loading ? (
-            <p>Loading...</p>
+            <span className="h-full flex items-center justify-center text-center loading loading-spinner loading-xl"></span>
           ) : error ? (
-            <p className="text-red-500">Error: {error}</p>
+            <p className="w-full h-full flex items-center justify-center text-center text-red-500">
+              Error: {error}
+            </p>
           ) : (
             <table className="table table-sm table-pin-rows">
               <thead>

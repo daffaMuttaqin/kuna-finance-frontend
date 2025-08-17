@@ -35,8 +35,12 @@ const expenseSlice = createSlice({
       state.data.push(action.payload);
     },
     updateExpense: (state, action) => {
-      const index = state.data.findIndex((e) => e.id === action.payload.id);
-      if (index !== -1) state.data[index] = action.payload;
+      const index = state.data.findIndex(
+        (i) => Number(i.id) === action.payload.id
+      );
+      if (index !== -1) {
+        state.data[index] = { ...state.data[index], ...action.payload };
+      }
     },
     deleteExpense: (state, action) => {
       state.data = state.data.filter((e) => e.id !== action.payload);
