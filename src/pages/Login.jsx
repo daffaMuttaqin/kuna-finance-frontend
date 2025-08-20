@@ -21,7 +21,10 @@ const Login = () => {
       );
 
       // Simpan token ke localStorage
-      localStorage.setItem("token", res.data.token);
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.user.role); // simpan role juga
+      }
       navigate("/dashboard");
     } catch (err) {
       setMsg(err.response?.data?.message || "Login gagal");

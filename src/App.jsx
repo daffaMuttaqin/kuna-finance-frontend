@@ -7,6 +7,7 @@ import Expense from "./pages/Expense";
 import ActivityLogs from "./pages/ActivityLogs";
 import ProtectedRoutes from "./components/ProtectedRoute";
 import Home from "./pages/Home";
+import Admin from "./pages/Admin";
 import Customer from "./pages/Customer";
 import NoSidebarLayout from "./layouts/NoSidebarLayout";
 import SidebarLayout from "./layouts/SidebarLayout";
@@ -72,6 +73,14 @@ function App() {
             element={
               <ProtectedRoutes>
                 <ActivityLogs />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoutes allowedRoles={["superadmin"]}>
+                <Admin />
               </ProtectedRoutes>
             }
           />
